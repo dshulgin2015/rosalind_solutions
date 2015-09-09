@@ -9,7 +9,7 @@ def readGenome(filename):
                 data[next(f).rstrip()] = line.rstrip()
     return data
 
-def overlap(a, b, min_length=3):
+def overlap(a, b, min_length=2):
     """ Return length of longest suffix of 'a' matching
         a prefix of 'b' that is at least 'min_length'
         characters long.  If no such overlap exists,
@@ -25,17 +25,16 @@ def overlap(a, b, min_length=3):
         start += 1  # move just past previous match
 
 def naive_overlap_map(reads, k):
-    olaps = {}
+    olaps = []
     for a, b in permutations(reads, 2):
         olen = overlap(a, b, min_length=k)
-        if olen > 0:
-            olaps[(a, b)] = olen
+        if olen >= 3:
+            olaps.append((a, b))
     return olaps 
 
-def print_result(map, data):
+def print_result(list, data):
     res_str = ''
-    for x in map.keys():
-        #if(map[x] == 3):
+    for x in list:
         res_str = res_str + data[x[0]][1:] + ' ' + data[x[1]][1:] + '\n'
     print res_str
 
@@ -44,4 +43,4 @@ def print_result(map, data):
 data = readGenome('GRPH.txt')
 #print (naive_overlap_map(data.keys(), 3))
 
-print_result(naive_overlap_map(data.keys(), 3), data)
+print_result(naive_overlap_map(data.keys(), 3),data)
